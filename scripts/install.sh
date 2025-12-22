@@ -1,5 +1,5 @@
 #!/bin/bash
-# Dotfiles Installation Script (Copy Mode)
+# Dotfiles Installation Script
 # Prometheus v5.1 Configuration
 
 set -e
@@ -9,32 +9,33 @@ BACKUP_DIR="$HOME/.dotfiles-backup/$(date +%Y%m%d_%H%M%S)"
 CODEX_DIR="$HOME/.codex"
 CLAUDE_DIR="$HOME/.claude"
 
-echo "🚀 Prometheus Dotfiles Installer (Copy Mode)"
-echo "============================================="
+echo "🚀 Prometheus Dotfiles Installer"
+echo "================================="
 
 # Create backup directory
 mkdir -p "$BACKUP_DIR"
 
-# Function to backup and copy
-backup_and_copy() {
+# Function to backup and link
+backup_and_link() {
     local source="$1"
     local target="$2"
     
-    if [ -e "$target" ]; then
+    if [ -e "$target" ] && [ ! -L "$target" ]; then
         echo "📦 Backing up: $target"
-        cp -r "$target" "$BACKUP_DIR/" 2>/dev/null || true
+        cp -r "$target" "$BACKUP_DIR/"
+    fi
+    
+    if [ -L "$target" ]; then
+        rm "$target"
+    elif [ -e "$target" ]; then
+        rm -rf "$target"
     fi
     
     # Ensure parent directory exists
     mkdir -p "$(dirname "$target")"
     
-    if [ -d "$source" ]; then
-        rm -rf "$target"
-        cp -r "$source" "$target"
-    else
-        cp "$source" "$target"
-    fi
-    echo "📋 Copied: $source -> $target"
+    ln -s "$source" "$target"
+    echo "🔗 Linked: $source -> $target"
 }
 
 # ===== Codex Configuration =====
@@ -42,55 +43,22 @@ echo ""
 echo "📁 Setting up Codex configuration..."
 
 mkdir -p "$CODEX_DIR"
-mkdir -p "$CODEX_DIR/prompts"
-mkdir -p "$CODEX_DIR/skills"
-mkdir -p "$CODEX_DIR/rules"
 
-backup_and_copy "$DOTFILES_DIR/codex/AGENTS.md" "$CODEX_DIR/AGENTS.md"
-backup_and_copy "$DOTFILES_DIR/codex/CLAUDE.md" "$CODEX_DIR/CLAUDE.md"
-
-# Copy prompts
-for file in "$DOTFILES_DIR/codex/prompts/"*; do
-    [ -e "$file" ] && cp "$file" "$CODEX_DIR/prompts/"
-done
-
-# Copy skills
-for skill_dir in "$DOTFILES_DIR/codex/skills/prometheus-"*; do
-    if [ -d "$skill_dir" ]; then
-        skill_name=$(basename "$skill_dir")
-        backup_and_copy "$skill_dir" "$CODEX_DIR/skills/$skill_name"
-    fi
-done
-[ -f "$DOTFILES_DIR/codex/skills/README.md" ] && cp "$DOTFILES_DIR/codex/skills/README.md" "$CODEX_DIR/skills/"
-
-# Copy rules
-for file in "$DOTFILES_DIR/codex/rules/"*; do
-    [ -e "$file" ] && cp "$file" "$CODEX_DIR/rules/"
-done
+backup_and_link "$DOTFILES_DIR/codex/AGENTS.md" "$CODEX_DIR/AGENTS.md"
+backup_and_link "$DOTFILES_DIR/codex/CLAUDE.md" "$CODEX_DIR/CLAUDE.md"
+backup_and_link "$DOTFILES_DIR/codex/prompts" "$CODEX_DIR/prompts"
+backup_and_link "$DOTFILES_DIR/codex/skills" "$CODEX_DIR/skills"
+backup_and_link "$DOTFILES_DIR/codex/rules" "$CODEX_DIR/rules"
 
 # ===== Claude Configuration =====
 echo ""
 echo "📁 Setting up Claude configuration..."
 
 mkdir -p "$CLAUDE_DIR"
-mkdir -p "$CLAUDE_DIR/commands"
-mkdir -p "$CLAUDE_DIR/skills"
 
-backup_and_copy "$DOTFILES_DIR/claude/CLAUDE.md" "$CLAUDE_DIR/CLAUDE.md"
-
-# Copy commands
-for file in "$DOTFILES_DIR/claude/commands/"*; do
-    [ -e "$file" ] && cp "$file" "$CLAUDE_DIR/commands/"
-done
-
-# Copy skills
-for skill_dir in "$DOTFILES_DIR/claude/skills/prometheus-"*; do
-    if [ -d "$skill_dir" ]; then
-        skill_name=$(basename "$skill_dir")
-        backup_and_copy "$skill_dir" "$CLAUDE_DIR/skills/$skill_name"
-    fi
-done
-[ -f "$DOTFILES_DIR/claude/skills/README.md" ] && cp "$DOTFILES_DIR/claude/skills/README.md" "$CLAUDE_DIR/skills/"
+backup_and_link "$DOTFILES_DIR/claude/CLAUDE.md" "$CLAUDE_DIR/CLAUDE.md"
+backup_and_link "$DOTFILES_DIR/claude/commands" "$CLAUDE_DIR/commands"
+backup_and_link "$DOTFILES_DIR/claude/skills" "$CLAUDE_DIR/skills"
 
 # ===== Setup Auto-Sync (macOS) =====
 echo ""
@@ -137,9 +105,10 @@ fi
 echo ""
 echo "✅ Installation complete!"
 echo ""
-echo "📝 Sync workflow:"
-echo "   1. Edit files in ~/.codex/ or ~/.claude/"
-echo "   2. Run: ~/dotfiles/scripts/sync.sh (or wait for auto-sync)"
-echo "   3. Changes will be copied to dotfiles and pushed to GitHub"
+echo "📝 Next steps:"
+echo "   1. Copy config template: cp $DOTFILES_DIR/config/codex-config.toml.template ~/.codex/config.toml"
+echo "   2. Edit and add your API keys: vim ~/.codex/config.toml"
+echo "   3. Restart Codex/Claude Code to load new configuration"
 echo ""
 echo "📦 Backup saved to: $BACKUP_DIR"
+
