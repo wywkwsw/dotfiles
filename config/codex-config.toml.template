@@ -1,0 +1,27 @@
+# Codex Configuration Template
+# Copy this file to ~/.codex/config.toml and fill in your values
+
+model = "gpt-5.1-codex-max"
+model_reasoning_effort = "xhigh"
+
+# ===== Features =====
+[features]
+skills = true
+
+# ===== MCP Servers =====
+# Context7 - Documentation lookup
+[mcp_servers.context7]
+type = "stdio"
+command = "npx"
+args = ["-y", "@upstash/context7-mcp", "--api-key", "YOUR_CONTEXT7_API_KEY"]
+
+# Add more MCP servers as needed
+# [mcp_servers.memory]
+# type = "stdio"
+# command = "..."
+
+# ===== Project Trust Levels =====
+# Add your trusted project paths
+# [projects."/path/to/your/project"]
+# trust_level = "trusted"
+

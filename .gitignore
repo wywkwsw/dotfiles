@@ -1,0 +1,64 @@
+# ===== Sensitive Files =====
+# Authentication & API keys
+auth.json
+*.key
+*.pem
+**/secrets/
+
+# Config files with credentials (use templates)
+codex/config.toml
+claude/settings.json
+
+# ===== Temporary & Local Files =====
+# Session data
+sessions/
+projects/
+file-history/
+session-env/
+
+# History & logs
+*.jsonl
+log/
+debug/
+telemetry/
+
+# Cache
+cache/
+*-cache.json
+statsig/
+
+# IDE & system
+*.lock
+.DS_Store
+*.swp
+*.swo
+
+# Shell snapshots
+shell_snapshots/
+shell-snapshots/
+
+# Todos (local)
+todos/
+
+# Plugins (can reinstall)
+plugins/
+
+# IDE specific
+ide/
+
+# Backup files
+*copy/
+* copy/
+*.bak
+*.backup
+
+# ===== Keep These (explicit) =====
+!codex/AGENTS.md
+!codex/CLAUDE.md
+!codex/prompts/
+!codex/skills/
+!codex/rules/
+!claude/CLAUDE.md
+!claude/commands/
+!claude/skills/
+
