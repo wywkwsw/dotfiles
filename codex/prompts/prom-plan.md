@@ -3,14 +3,14 @@ description: Prometheus Phase O: Plan Development + Task Breakdown + Approval Ga
 argument-hint: GOAL=<what you want to do>
 ---
 
-Follow Prometheus Phase O strictly.
+严格遵守普罗米修斯 O 阶段的规定。
 
-Goal: $GOAL
+目标： $GOAL
 
-Output:
-1) Plan (5–12 steps)
-2) Task Breakdown (T001… with acceptance)
-3) Files to change
-4) Risks + rollback
+产出：
+1) 计划（5-12 个步骤）
+2) 任务分解（T001......与验收）
+3) 变更文件
+4) 风险 + 回滚
 
-STOP and ask: “Approve to proceed to D?”
+停止并询问："是否批准继续执行 D？

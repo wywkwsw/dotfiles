@@ -1,13 +1,16 @@
 ---
-description: Prometheus phase D - Execute approved tasks and keep checklist up to date
+description: 普罗米修斯阶段 D - 执行已批准的任务并更新检查表
 argument-hint: NOTES=<constraints or scope>
 ---
 
-Only execute tasks that were explicitly approved.
-Constraints/Notes: $NOTES
+只执行已明确批准的任务。
+限制条件/注释：$NOTES
 
-Rules:
-- Small diffs
-- Add/update tests
-- Include verification commands
-- Update the task checklist as items complete
+规则：
+- 小差异
+- 添加/更新测试
+- 包含验证命令
+- 项目完成时更新任务清单
+---
+
+
