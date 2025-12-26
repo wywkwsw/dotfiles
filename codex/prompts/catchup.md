@@ -1,5 +1,5 @@
 ---
-description: Continue unfinished work by reading ALL uncommitted changes on the current branch (staged + unstaged + untracked), then implementing the missing parts.
+description: 通过读取当前分支上所有未提交的变更（已暂存+未暂存+未跟踪）来继续未完成的工作，然后执行缺失的部分。
 argument-hint: [FOCUS="<what to finish>"] [MODE=continue|plan|recap]
 allowed-tools: Bash(git status:*), Bash(git diff:*), Bash(git ls-files:*), Bash(git rev-parse:*), Read(*), Write(*)
 ---
