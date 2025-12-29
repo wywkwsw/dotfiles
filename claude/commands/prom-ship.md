@@ -2,6 +2,6 @@
 description: Prometheus phase D - Execute approved tasks and keep checklist up to date
 ---
 
-Only execute approved tasks.
-Keep diffs small, add/update tests, and include verification commands.
-Update the task checklist as items complete.
+只执行经批准的任务。
+保持较小的差异，添加/更新测试，并包含验证命令。
+项目完成后更新任务清单。
