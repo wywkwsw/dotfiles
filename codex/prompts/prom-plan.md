@@ -1,5 +1,5 @@
 ---
-description: Prometheus Phase O: Plan Development + Task Breakdown + Approval Gates
+description: 普罗米修斯 O 阶段：计划制定 + 任务分解 + 审批关口
 argument-hint: GOAL=<what you want to do>
 ---
 

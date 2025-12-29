@@ -1,36 +1,36 @@
----
-description: 通过读取当前分支上所有未提交的变更（已暂存+未暂存+未跟踪）来继续未完成的工作，然后执行缺失的部分。
-argument-hint: [FOCUS="<what to finish>"] [MODE=continue|plan|recap]
-allowed-tools: Bash(git status:*), Bash(git diff:*), Bash(git ls-files:*), Bash(git rev-parse:*), Read(*), Write(*)
----
+ ---
+  description: 通过读取当前分支上所有未提交的变更（已暂存+未暂存+未跟踪）来继续未完成的工作，然后执行缺失的部分。
+  argument-hint: [FOCUS="<要完成的事项>"] [MODE=continue|plan|recap]
+  allowed-tools: Bash(git status:*), Bash(git diff:*), Bash(git ls-files:*), Bash(git rev-parse:*), Read(*), Write(*)
+  ---
 
-## Snapshot (auto; you do not need to run any VCS commands manually)
-- Branch + HEAD: !`git rev-parse --abbrev-ref HEAD && git rev-parse --short HEAD`
-- Working tree summary: !`git status -sb`
+  ## 快照（自动；你无需手动运行任何 VCS 命令）
+  - 分支 + HEAD: !`git rev-parse --abbrev-ref HEAD && git rev-parse --short HEAD`
+  - 工作区概要: !`git status -sb`
 
-## Uncommitted file inventory (MUST treat this as the source of truth)
-- Staged files: !`git diff --name-only --cached`
-- Unstaged files: !`git diff --name-only`
-- Untracked files: !`git ls-files --others --exclude-standard`
+  ## 未提交文件清单（必须视为唯一事实来源）
+  - 已暂存文件: !`git diff --name-only --cached`
+  - 未暂存文件: !`git diff --name-only`
+  - 未跟踪文件: !`git ls-files --others --exclude-standard`
 
-## Your task (MODE=$MODE, FOCUS=$FOCUS)
-You are resuming after context loss (compact/clear). Do NOT ask the user for Git outputs.
+  ## 你的任务（MODE=$MODE, FOCUS=$FOCUS）
+  你正在在上下文丢失后继续工作（简洁/清晰）。不要向用户索要 Git 输出。
 
-1) Build the “Uncommitted Set” = union(staged + unstaged + untracked).
-2) Read **every file** in that set from disk (current working tree).
-   - If a file is huge/binary, summarize it instead of dumping it.
-3) Infer the unfinished requirements by scanning:
-   - TODO/FIXME/WIP markers
-   - partially implemented functions, missing exports, unfinished UI flows
-   - failing tests or missing test coverage clues
-4) MODE behavior:
-   - recap: only summarize what’s going on + next steps.
-   - plan: propose an execution plan + verification commands.
-   - continue (default): implement the missing parts now.
-5) While continuing:
-   - Keep changes minimal and consistent with existing code style.
-   - If multiple plausible intents exist, pick the most consistent one and proceed, noting assumptions.
-6) End with:
-   - what you changed (by file)
-   - what remains (if anything)
-   - exact verification steps to run locally
+  1) 构建“未提交集合” = 并集(已暂存 + 未暂存 + 未跟踪)。
+  2) 从磁盘读取该集合中的**每一个文件**（当前工作树）。
+     - 如果文件很大/是二进制，做摘要即可，不要整段倾倒。
+  3) 通过扫描以下线索推断未完成的需求：
+     - TODO/FIXME/WIP 标记
+     - 半成品函数、缺失的导出、未完成的 UI 流程
+     - 失败的测试或缺失测试覆盖率的线索
+  4) MODE 行为：
+     - recap：只总结当前在做什么 + 下一步。
+     - plan：提出执行计划 + 验证命令。
+     - continue（默认）：现在就把缺失部分补齐并实现。
+  5) 在 continue 模式下：
+     - 变更保持最小，并与现有代码风格一致。
+     - 如果存在多个合理意图，选择与现有内容最一致的那个并继续，同时说明假设。
+  6) 结束时包含：
+     - 你改了什么（按文件列出）
+     - 还剩什么（如果有）
+     - 本地需要运行的精确验证步骤
