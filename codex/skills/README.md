@@ -10,6 +10,7 @@
 | `prometheus-aether-ui` | Liquid Glass aesthetics | UI, styling, design, frontend |
 | `prometheus-debug` | Advanced debugging | bug, error, fix, debug, test failure |
 | `prometheus-tooling` | Graceful degradation | Tool unavailable, MCP failure |
+| `prometheus-ace` | Augment Code Engine | Deep context, semantic search, large codebase |
 
 ## How Skills Work in Codex
 
@@ -25,6 +26,9 @@
 | UI feature | `prometheus-core` + `prometheus-aether-ui` |
 | Bug investigation | `prometheus-core` + `prometheus-debug` |
 | Tool-limited environment | `prometheus-core` + `prometheus-tooling` |
+| Complex refactoring | `prometheus-core` + `prometheus-ace` |
+| Large codebase navigation | `prometheus-ace` |
+| Deep bug tracing | `prometheus-debug` + `prometheus-ace` |
 
 ## Quick Reference
 
@@ -46,3 +50,9 @@ L1: Static review → L2: Unit tests → L3: E2E
 Output: Root Cause → Fix → How to Verify
 ```
 
+### ACE Integration
+```
+Context: Project structure + Symbol graph
+Query: Semantic search + Dependency analysis
+Output: Insights + Impact assessment
+```

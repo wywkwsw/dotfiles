@@ -10,6 +10,7 @@
 | `prometheus-aether-ui` | Liquid Glass UI aesthetics | 🟡 Conditional | UI, UX, styling, design, component, frontend |
 | `prometheus-debug` | Advanced debugging protocol | 🟡 Conditional | bug, error, fix, debug, crash, failing test |
 | `prometheus-tooling` | Graceful degradation | 🟢 Fallback | (auto when tools unavailable) |
+| `prometheus-ace` | Augment Code Context Engine | 🟡 Conditional | context, semantic search, codebase, find usage |
 | `prometheus-code-cycle` | Change header comments | ⚪ Optional | audit, tracing, changelog (user request only) |
 
 ---
@@ -19,16 +20,20 @@
 ### Priority Order
 ```
 1. prometheus-core        (always loads first)
-2. prometheus-aether-ui   (if UI-related)
-3. prometheus-debug       (if debugging-related)
-4. prometheus-tooling     (if tools fail)
-5. prometheus-code-cycle  (only on explicit request)
+2. prometheus-ace         (if codebase exploration needed)
+3. prometheus-aether-ui   (if UI-related)
+4. prometheus-debug       (if debugging-related)
+5. prometheus-tooling     (if tools fail)
+6. prometheus-code-cycle  (only on explicit request)
 ```
 
 ### Auto-Detection Logic
 ```
 IF task is non-trivial:
     LOAD prometheus-core
+    
+    IF task.requires(codebase exploration, semantic search, find usage):
+        LOAD prometheus-ace
     
     IF task.contains(UI, styling, design, frontend):
         LOAD prometheus-aether-ui
@@ -60,6 +65,8 @@ Please use the Prometheus <skill-name> skill for this task
 | Tool-limited env | `core` + `tooling` | Use fallback strategies |
 | Enterprise project | `core` + `code-cycle` | Add change headers |
 | Full UI project | `core` + `aether-ui` + `code-cycle` | Aesthetics + tracing |
+| Codebase exploration | `core` + `ace` | Semantic search + context |
+| Large refactoring | `core` + `ace` + `debug` | Find all usages + validation |
 
 ---
 
@@ -105,6 +112,13 @@ Tool fails → Check fallback table → Provide alternative
 Never block progress due to tool unavailability
 ```
 
+### ACE (When Exploring)
+```
+Semantic search → Usage finding → Context retrieval
+Use before Grep for broad understanding
+Combine with targeted file reads
+```
+
 ---
 
 ## Version Info
@@ -115,4 +129,5 @@ Never block progress due to tool unavailability
 | prometheus-aether-ui | 1.0.0 | 2024-12-22 |
 | prometheus-debug | 1.0.0 | 2024-12-22 |
 | prometheus-tooling | 1.0.0 | 2024-12-22 |
+| prometheus-ace | 1.0.0 | 2024-12-22 |
 | prometheus-code-cycle | 1.0.0 | 2024-12-22 |
