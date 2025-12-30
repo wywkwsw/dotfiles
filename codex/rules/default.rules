@@ -5,3 +5,4 @@ prefix_rule(pattern=["git", "add", "issues/issues.csv", "main/src/main.ts"], dec
 prefix_rule(pattern=["git", "commit", "-m", "[PPF2-020] 修复 main SSO token 写入并移除日志"], decision="allow")
 prefix_rule(pattern=["git", "add", "issues/issues.csv", "main/src/app/common/services/storage.service.ts", "jpush/src/app/common/services/storage.service.ts"], decision="allow")
 prefix_rule(pattern=["git", "commit", "-m", "[PPF2-030] 修复 StorageService.remove cookie 删除"], decision="allow")
+prefix_rule(pattern=["git", "add", ".eslintignore", "src/components/manual-input/index.vue", "issues/issues.csv"], decision="allow")

@@ -4,6 +4,31 @@ argument-hint: [FOCUS="<what to finish>"] [MODE=continue|plan|recap]
 allowed-tools: Bash(git status:*), Bash(git diff:*), Bash(git ls-files:*), Bash(git rev-parse:*), Read(*), Write(*)
 ---
 
+## 上下文收集策略 ⚡
+
+恢复上下文时需要理解未完成工作的意图。
+
+### 工具优先级
+
+| 优先级 | 工具 | 用途 | 降级条件 |
+|--------|------|------|----------|
+| 1️⃣ | `ace-tool (mcp__ace-tool__search_context)` | 理解修改意图、查找相关代码 | 连接失败/超时 |
+| 2️⃣ | `rg` / `grep` | 搜索 TODO/FIXME/WIP 标记 | ace-tool 不可用时 |
+| 3️⃣ | `ReadFile` + `git diff` | 读取变更内容 | 基础手段 |
+
+### 降级策略
+
+如果 ace-tool 不可用：
+
+1. **标注状态**：在输出中标注 `⚠️ ace-tool 不可用，意图推断可能不完整`
+2. **替代方案**：
+   - `rg "TODO|FIXME|WIP" <changed_files>` 查找标记
+   - `git diff HEAD` 分析变更内容
+   - 读取变更文件的完整上下文
+3. **增加确认**：在 MODE=continue 时，先输出推断的意图让用户确认
+
+---
+
 ## Snapshot (auto; you do not need to run any VCS commands manually)
 - Branch + HEAD: !`git rev-parse --abbrev-ref HEAD && git rev-parse --short HEAD`
 - Working tree summary: !`git status -sb`

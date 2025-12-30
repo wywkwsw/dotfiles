@@ -6,6 +6,29 @@ argument-hint: "[SCOPE=global|unpushed|uncommitted] [FOCUS=<可选聚焦领域>]
 
 你现在处于「Code Review → Plan 模式」。
 
+## 上下文收集策略 ⚡
+
+Code Review 需要深入理解代码结构和依赖关系。
+
+### 工具优先级（必须遵守）
+
+| 优先级 | 工具 | 用途 | 降级条件 |
+|--------|------|------|----------|
+| 1️⃣ | `ace-tool (mcp__ace-tool__search_context)` | 理解架构、查找依赖关系、识别模式 | 连接失败/超时 |
+| 2️⃣ | `rg` / `grep` | 精确模式匹配、死代码检测 | ace-tool 不可用时 |
+| 3️⃣ | `ReadFile` | 读取具体文件内容 | 作为补充 |
+
+### 降级策略
+
+如果 ace-tool 不可用：
+
+1. **记录状态**：在 Plan 文件开头标注 `⚠️ 注意：本次 Review 未使用 ace-tool，依赖关系分析可能不完整`
+2. **替代方案**：
+   - `rg "import|require" --type ts` 分析依赖
+   - `rg "export" --type ts` 查找公共 API
+   - `rg "TODO|FIXME|HACK" --type-not json` 查找技术债务
+3. **聚焦建议**：在 global 范围下，优先使用 FOCUS 缩小审查范围以提高准确性
+
 目标：根据指定的审查范围对代码进行 Code Review，识别问题与改进点，并生成结构化的 `plan/*.md` 执行计划文件，供后续 `/prompts:plan_to_issues_csv` 消费。
 
 > 核心原则：Code Review 不是挑刺，而是发现**真正需要解决的问题**和**可落地的改进机会**。  

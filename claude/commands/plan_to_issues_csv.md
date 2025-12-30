@@ -6,6 +6,28 @@ argument-hint: "<plan 文件路径（可选，默认取 plan/ 最新）>"
 
 你现在处于「Plan → Issues CSV 模式」。
 
+## 上下文收集策略 ⚡
+
+在生成 CSV 前，可能需要补充上下文以完善 `refs` 字段。
+
+### 工具优先级
+
+| 优先级 | 工具 | 用途 | 降级条件 |
+|--------|------|------|----------|
+| 1️⃣ | `ace-tool (mcp__ace-tool__search_context)` | 定位入口文件、查找关键函数、理解模块关系 | 连接失败/超时 |
+| 2️⃣ | `rg` / `grep` | 精确定位符号、查找文件引用 | ace-tool 不可用时 |
+| 3️⃣ | `ReadFile` | 读取已知文件确认行号 | 作为补充 |
+
+### 降级策略
+
+如果 ace-tool 不可用：
+
+1. **标注状态**：`⚠️ ace-tool 不可用，refs 可能不完整`
+2. **替代方案**：
+   - `rg "functionName" --type ts -n` 带行号搜索
+   - `rg "export.*ComponentName" --type vue` 查找组件定义
+3. **refs 填写建议**：优先填写已知文件，标注 `TBD` 表示待补充
+
 目标：把当前项目的 `plan/*.md`（由 `/prompts:plan` 生成的执行计划）转换为可落盘、可协作维护的 `issues/*.csv`，并确保该 CSV 可以作为代码的一部分提交到仓库中，用于长期追踪任务边界与状态。
 
 > 核心原则：ISSUES CSV 是“会议落盘的任务边界合同”，不是 AI 自嗨文档。  

@@ -6,6 +6,29 @@ argument-hint: "<issues CSV 文件路径>"
 
 你现在处于「Issues CSV 执行模式（闭环）」。
 
+## 上下文收集策略 ⚡
+
+在执行每条 issue 前，必须先理解代码上下文。
+
+### 工具优先级（必须遵守）
+
+| 优先级 | 工具 | 用途 | 降级条件 |
+|--------|------|------|----------|
+| 1️⃣ | `ace-tool (mcp__ace-tool__search_context)` | 语义搜索、理解代码关系、查找所有用法 | 连接失败/超时 |
+| 2️⃣ | `rg` / `grep` | 精确模式匹配、符号定位 | ace-tool 不可用时 |
+| 3️⃣ | `ReadFile` | 读取 refs 指向的文件 | 作为补充 |
+
+### 降级策略
+
+如果 ace-tool 不可用：
+
+1. **记录状态**：在该行 `notes` 追加 `context_tool_degraded:true`
+2. **替代方案**：
+   - `rg "symbol" --type <lang> -n` 精确搜索
+   - 从 `refs` 字段指向的文件开始读取
+   - `rg "import.*from" --type ts` 追踪依赖关系
+3. **增加验证步骤**：重构操作必须用 `rg` 二次确认所有用法
+
 目标：以 `issues/*.csv` 为任务边界与状态源，推进并交付 issue 的完整闭环：**实现 → Review → 自我验收 → Git 提交**（不 push）。
 
 > 说明：本 prompt 只在用户显式调用 `/prompts:issues_csv_execute` 时生效，不影响普通对话。
