@@ -29,6 +29,8 @@
 | Complex refactoring | `prometheus-core` + `prometheus-ace` |
 | Large codebase navigation | `prometheus-ace` |
 | Deep bug tracing | `prometheus-debug` + `prometheus-ace` |
+| Code review (global) | `prometheus-ace` + `prometheus-core` |
+| Code review (PR/unpushed) | `prometheus-ace` + `prometheus-debug` |
 
 ## Quick Reference
 

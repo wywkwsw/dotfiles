@@ -48,6 +48,76 @@ description: Augment Code Engine (ACE) MCP integration for enhanced context unde
 | 新项目理解 | 架构图谱 + 入口点识别 | 项目摸底 |
 | Bug 追踪 | 调用链追溯 + 数据流分析 | 复杂 debug |
 | 代码迁移 | 相似代码检测 + 模式识别 | 技术栈升级 |
+| Code Review (全局) | 架构一致性 + 代码规范检查 | 项目审计 |
+| Code Review (增量) | 变更影响分析 + 风险评估 | PR/unpushed/uncommitted |
+
+## Code Review 场景集成
+
+ACE 在 Code Review 中提供深度上下文支持，配合 `/prompts:code_review_plan` 使用效果最佳。
+
+### 三种审查范围
+
+| SCOPE | ACE 辅助能力 |
+|-------|-------------|
+| `global` | 全局架构分析、模块依赖图、代码规范一致性检查 |
+| `unpushed` | 变更影响范围评估、受影响模块识别、回归风险预测 |
+| `uncommitted` | 实时变更分析、类型安全检查、命名一致性验证 |
+
+### Code Review 工作流
+
+```
+1. 确定审查范围 (global/unpushed/uncommitted)
+       ↓
+2. ACE 构建上下文 (依赖图 + 符号表)
+       ↓
+3. ACE 分析变更影响 (影响范围 + 风险等级)
+       ↓
+4. 执行审查检查清单
+       ↓
+5. 生成 plan/*.md (含 ACE 洞察)
+       ↓
+6. 转换为 issues/*.csv
+```
+
+### Code Review 查询模板
+
+#### 全局审查 (global)
+```
+对项目进行全面 Code Review，分析：
+- 架构一致性与模块边界
+- 循环依赖检测
+- 代码重复度
+- 类型安全覆盖率
+- 未使用的导出/死代码
+```
+
+#### 增量审查 (unpushed/uncommitted)
+```
+分析以下变更的影响：
+<file_list>
+
+评估：
+- 直接影响的模块
+- 可能受影响的消费者
+- 需要更新的测试
+- 潜在的破坏性变更
+- 类型兼容性风险
+```
+
+### ACE Code Review 响应模板
+
+```
+[STATUS]
+Phase: C (Code Review)
+Task: <scope> 范围代码审查
+Code-Intel-Sync: ACE loaded <N> files, <M> symbols
+ACE-Review-Insights:
+  - Architecture: <findings>
+  - Dependencies: <circular/unused>
+  - Code Quality: <issues found>
+  - Risk Level: Low|Medium|High
+Next: 生成 plan/*.md 或继续深入分析
+```
 
 ## 与 C.O.D.E 流程集成
 
