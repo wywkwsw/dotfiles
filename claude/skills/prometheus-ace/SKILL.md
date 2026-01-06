@@ -131,15 +131,33 @@ Get relevant context for a specific task.
 
 ---
 
-## Fallback Strategy
+## Fallback Strategy ⚠️
 
-If ACE is unavailable:
+**当 ace-tool 不可用时（连接失败、超时、返回错误）：**
 
-| ACE Feature | Fallback |
-|-------------|----------|
-| Semantic search | `mcp.SemanticSearch` or manual exploration |
-| Usage finding | `rg "symbol"` with file type filters |
-| Context retrieval | Manual file reading + `Grep` |
+### 1. 标记状态
+```
+⚠️ ace-tool unavailable, using fallback strategy
+```
+
+### 2. 降级映射表
+
+| ACE Feature | Fallback Command | Notes |
+|-------------|------------------|-------|
+| Semantic search | `rg "keyword" --type <lang> -C 3` | 多关键字组合搜索 |
+| Usage finding | `rg "symbol" --type <lang> -n` | 带行号，便于定位 |
+| Context retrieval | `ReadFile` + `rg "import"` | 从入口文件开始 |
+| Dependency analysis | `rg "import.*from" --type ts` | 追踪导入关系 |
+
+### 3. 降级后的额外步骤
+
+- 重构操作：必须用 `rg` 二次确认所有用法
+- 删除操作：必须搜索所有引用确认无遗漏
+- 修改接口：必须查找所有调用方
+
+### 4. 风险标注
+
+降级后的推断需标注：`⚠️ inferred without semantic search, needs confirmation`
 
 ---
 

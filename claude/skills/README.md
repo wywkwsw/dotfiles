@@ -79,6 +79,26 @@ When skills have conflicting guidance:
 | `core` vs `debug` on D phase | `debug` takes precedence for error-related tasks |
 | `aether-ui` vs speed | Aesthetics are non-negotiable, find efficient implementation |
 | `tooling` fallback vs tool usage | Always try tool first, fallback only on failure |
+| `ace-tool` vs `ReadFile` | **ace-tool 优先**，ReadFile 仅用于读取定位到的文件 |
+
+---
+
+## Tool Priority Rule ⚡
+
+**代码上下文获取必须遵循以下优先级：**
+
+```
+1️⃣ ace-tool (mcp__ace-tool__search_context)  ← MUST TRY FIRST
+    ↓ (only if failed)
+2️⃣ rg / grep (pattern search)
+    ↓ (for specific content)
+3️⃣ ReadFile (read located files)
+```
+
+**禁止行为：**
+- ❌ 跳过 ace-tool 直接用 ReadFile 探索代码
+- ❌ 在 ace-tool 可用时使用 grep 进行语义搜索
+- ❌ 不尝试 ace-tool 就使用降级方案
 
 ---
 
@@ -112,11 +132,11 @@ Tool fails → Check fallback table → Provide alternative
 Never block progress due to tool unavailability
 ```
 
-### ACE (When Exploring)
+### ACE (When Exploring) ⚡ PRIORITY TOOL
 ```
-Semantic search → Usage finding → Context retrieval
-Use before Grep for broad understanding
-Combine with targeted file reads
+ace-tool FIRST → Fallback to rg/grep → Then ReadFile
+MUST try ace-tool before any code exploration
+Fallback: rg + ReadFile when ace unavailable
 ```
 
 ---

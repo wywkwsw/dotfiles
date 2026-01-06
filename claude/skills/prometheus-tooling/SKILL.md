@@ -18,6 +18,20 @@ triggers: [tool unavailable, MCP failure, permission denied, environment issues]
 
 ## Fallback Mapping Table
 
+### Code Context Tools (⚡ 优先级最高)
+
+| MCP Tool | Fallback Strategy | Commands |
+|----------|-------------------|----------|
+| `ace-tool` | 使用 rg/grep + ReadFile 组合 | `rg "pattern" --type <lang> -n` |
+
+**ace-tool 降级详细策略：**
+1. `rg "symbol" --type <lang> -n` — 符号定位
+2. `rg "import.*from" --type ts` — 依赖追踪  
+3. `find . -type f -name "*.ts"` — 文件定位
+4. `ReadFile` — 读取定位到的文件
+
+### Other MCP Tools
+
 | MCP Tool | Fallback Strategy |
 |----------|-------------------|
 | `mcp.playwright` | Provide manual test steps + expected results |

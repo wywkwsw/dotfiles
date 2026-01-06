@@ -99,6 +99,28 @@ Every debug response must include:
 
 ---
 
+## Tool Priority for Debugging ⚡
+
+调试时的代码上下文获取优先级：
+
+| Priority | Tool | Use For |
+|----------|------|---------|
+| 1️⃣ | `ace-tool` | 查找错误相关代码、追踪调用链、理解依赖关系 |
+| 2️⃣ | `rg` / `grep` | 搜索错误信息、查找特定模式 |
+| 3️⃣ | `ReadFile` | 读取错误文件的完整上下文 |
+
+### ace-tool 降级策略
+
+当 ace-tool 不可用时：
+1. **标记**：`⚠️ ace-tool unavailable, debug context may be incomplete`
+2. **替代**：
+   - `rg "error|exception|throw" --type <lang>` 搜索错误模式
+   - `rg "function_name" -n` 定位函数定义和调用
+   - `git log -p --follow <file>` 追踪文件变更历史
+3. **增加验证**：修复后必须运行相关测试确认
+
+---
+
 ## Relationship with Core
 
 This skill is the **deep mode** of `prometheus-core` D phase:
