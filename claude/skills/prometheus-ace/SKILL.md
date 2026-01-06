@@ -96,17 +96,24 @@ Get relevant context for a specific task.
 
 ---
 
-## Usage Priority
+## Usage Priority ⚡ (MUST FOLLOW)
 
-When gathering context, use tools in this order:
+**ace-tool 是代码上下文获取的首选工具。**
 
-```
-1. ACE (semantic search)     → Broad understanding
-2. Grep/rg (pattern search)  → Specific text patterns
-3. ReadFile                  → Detailed file content
-4. mcp.context7              → External documentation
-5. mcp.deepwiki              → Knowledge verification
-```
+| Priority | Tool | Use For | Fallback Trigger |
+|----------|------|---------|------------------|
+| 1️⃣ | `ace-tool (mcp__ace-tool__search_context)` | 语义搜索、代码关系、广泛理解 | 连接失败/超时/错误 |
+| 2️⃣ | `rg` / `grep` | 精确模式匹配、符号定位 | ace-tool 不可用时 |
+| 3️⃣ | `ReadFile` | 读取具体文件内容 | 作为补充手段 |
+| 4️⃣ | `mcp.context7` | 外部技术文档 | 需要框架/库知识时 |
+| 5️⃣ | `mcp.deepwiki` | 知识验证 | 需要验证信息时 |
+
+### 强制规则
+
+- ✅ **每次需要理解代码时，必须先尝试 ace-tool**
+- ✅ 仅当 ace-tool 失败后才使用 rg/grep 降级
+- ✅ ReadFile 用于读取 ace-tool 定位到的具体文件
+- ❌ 禁止跳过 ace-tool 直接使用 ReadFile 进行探索
 
 ---
 

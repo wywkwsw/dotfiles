@@ -125,11 +125,35 @@ Produce:
 
 ---
 
-## Tool Usage Priority
+## Tool Usage Priority ⚡
 
-1. `mcp.context7` — Check latest technical documentation
-2. `mcp.deepwiki` — Verify if knowledge is outdated
-3. `mcp.sequential_thinking` — Deep reasoning for complex problems
-4. `mcp.shrimp_task_manager` — Task breakdown and management
-5. `mcp.memory` — Store and retrieve experiential knowledge
-6. `mcp.feedback_enhanced` — Collect user feedback
+### Code Context Tools (按优先级使用)
+
+| Priority | Tool | Use For | Fallback Trigger |
+|----------|------|---------|------------------|
+| 1️⃣ | `ace-tool (mcp__ace-tool__search_context)` | 语义搜索、代码关系分析、跨文件上下文 | 连接失败/超时/错误 |
+| 2️⃣ | `rg` / `grep` | 精确模式匹配、符号定位 | ace-tool 不可用时 |
+| 3️⃣ | `ReadFile` | 读取具体文件内容 | 作为补充手段 |
+
+### ace-tool Fallback Strategy
+
+当 ace-tool 不可用时：
+
+1. **标记状态**：输出 `⚠️ ace-tool unavailable, using fallback`
+2. **替代方案**：
+   - `rg "pattern" --type <lang> -n` 带行号搜索
+   - `rg "import.*from" --type ts` 追踪依赖
+   - `find . -type f -name "*.ts"` 定位文件
+3. **增加验证**：重构操作必须用 `rg` 二次确认所有用法
+4. **标注风险**：依赖推断的结论标为 "needs confirmation"
+
+### Other MCP Tools
+
+| Tool | Purpose |
+|------|---------|
+| `mcp.context7` | Check latest technical documentation |
+| `mcp.deepwiki` | Verify if knowledge is outdated |
+| `mcp.sequential_thinking` | Deep reasoning for complex problems |
+| `mcp.shrimp_task_manager` | Task breakdown and management |
+| `mcp.memory` | Store and retrieve experiential knowledge |
+| `mcp.feedback_enhanced` | Collect user feedback |
