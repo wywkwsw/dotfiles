@@ -15,18 +15,25 @@ echo "================================="
 # Create backup directory
 mkdir -p "$BACKUP_DIR"
 
-# Extra backups (non-symlink files)
+# Extra backups (non-symlink paths)
 backup_if_present() {
     local target="$1"
 
     if [ -e "$target" ] && [ ! -L "$target" ]; then
         echo "📦 Backing up: $target"
-        cp -p "$target" "$BACKUP_DIR/"
+        if [ -d "$target" ]; then
+            cp -Rp "$target" "$BACKUP_DIR/"
+        else
+            cp -p "$target" "$BACKUP_DIR/"
+        fi
     fi
 }
 
 backup_if_present "$HOME/.config/opencode/opencode.jsonc"
 backup_if_present "$HOME/.config/opencode/oh-my-opencode.jsonc"
+backup_if_present "$HOME/.gemini/settings.json"
+backup_if_present "$HOME/.gemini/GEMINI.md"
+backup_if_present "$HOME/.gemini/skills"
 
 # Function to backup and link
 backup_and_link() {
