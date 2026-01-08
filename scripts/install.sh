@@ -15,6 +15,19 @@ echo "================================="
 # Create backup directory
 mkdir -p "$BACKUP_DIR"
 
+# Extra backups (non-symlink files)
+backup_if_present() {
+    local target="$1"
+
+    if [ -e "$target" ] && [ ! -L "$target" ]; then
+        echo "📦 Backing up: $target"
+        cp -p "$target" "$BACKUP_DIR/"
+    fi
+}
+
+backup_if_present "$HOME/.config/opencode/opencode.jsonc"
+backup_if_present "$HOME/.config/opencode/oh-my-opencode.jsonc"
+
 # Function to backup and link
 backup_and_link() {
     local source="$1"
@@ -111,4 +124,3 @@ echo "   2. Edit and add your API keys: vim ~/.codex/config.toml"
 echo "   3. Restart Codex/Claude Code to load new configuration"
 echo ""
 echo "📦 Backup saved to: $BACKUP_DIR"
-
