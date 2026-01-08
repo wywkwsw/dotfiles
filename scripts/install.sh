@@ -18,13 +18,24 @@ mkdir -p "$BACKUP_DIR"
 # Extra backups (non-symlink paths)
 backup_if_present() {
     local target="$1"
+    local rel=""
+    local dest_dir=""
 
     if [ -e "$target" ] && [ ! -L "$target" ]; then
         echo "📦 Backing up: $target"
-        if [ -d "$target" ]; then
-            cp -Rp "$target" "$BACKUP_DIR/"
+        rel="${target#$HOME/}"
+        if [ "$rel" != "$target" ]; then
+            dest_dir="$BACKUP_DIR/$(dirname "$rel")"
         else
-            cp -p "$target" "$BACKUP_DIR/"
+            dest_dir="$BACKUP_DIR"
+        fi
+
+        mkdir -p "$dest_dir"
+
+        if [ -d "$target" ]; then
+            cp -Rp "$target" "$dest_dir/"
+        else
+            cp -p "$target" "$dest_dir/"
         fi
     fi
 }

@@ -4,9 +4,30 @@
 
 DOTFILES_DIR="$HOME/dotfiles"
 LOG_FILE="$HOME/.dotfiles-sync.log"
+GEMINI_DIR="$HOME/.gemini"
 
 log() {
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" | tee -a "$LOG_FILE"
+}
+
+copy_file_if_exists() {
+    local src="$1"
+    local dest="$2"
+
+    if [ -f "$src" ]; then
+        mkdir -p "$(dirname "$dest")"
+        cp "$src" "$dest"
+    fi
+}
+
+copy_tree_if_exists() {
+    local src="$1"
+    local dest="$2"
+
+    if [ -d "$src" ]; then
+        mkdir -p "$dest"
+        cp -R "$src"/. "$dest/"
+    fi
 }
 
 cd "$DOTFILES_DIR" || exit 1
@@ -33,6 +54,11 @@ for skill in "$HOME/.claude/skills/prometheus-"*; do
     [ -d "$skill" ] && cp -r "$skill" "$DOTFILES_DIR/claude/skills/"
 done
 cp "$HOME/.claude/skills/README.md" "$DOTFILES_DIR/claude/skills/" 2>/dev/null
+
+# Gemini configs (explicit files/directories only)
+copy_file_if_exists "$GEMINI_DIR/settings.json" "$DOTFILES_DIR/gemini/settings.json"
+copy_file_if_exists "$GEMINI_DIR/GEMINI.md" "$DOTFILES_DIR/gemini/GEMINI.md"
+copy_tree_if_exists "$GEMINI_DIR/skills" "$DOTFILES_DIR/gemini/skills"
 
 # ===== Step 2: Check for changes =====
 if git diff --quiet && git diff --cached --quiet; then

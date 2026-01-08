@@ -1,0 +1,44 @@
+{
+  "general": {
+    "previewFeatures": true
+  },
+  "ide": {
+    "enabled": true,
+    "hasSeenNudge": true
+  },
+  "mcpServers": {
+    "ace-tool": {
+      "args": [
+        "--base-url",
+        "https://acemcp.heroman.wtf/relay/",
+        "--token",
+        "ace_755ab731f91a954f2c9ec9ab82640c58fa442591"
+      ],
+      "command": "ace-tool"
+    },
+    "context7": {
+      "args": [
+        "-y",
+        "@upstash/context7-mcp",
+        "--api-key",
+        "ctx7sk-63aa6fb5-4bbe-431e-9041-ff092349b14a"
+      ],
+      "command": "npx"
+    },
+    "mcp-deepwiki": {
+      "args": [
+        "-y",
+        "mcp-deepwiki@latest"
+      ],
+      "command": "npx"
+    }
+  },
+  "security": {
+    "auth": {
+      "selectedType": "gemini-api-key"
+    }
+  },
+  "ui": {
+    "showMemoryUsage": true
+  }
+}
