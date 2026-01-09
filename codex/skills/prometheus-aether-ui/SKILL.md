@@ -1,28 +1,31 @@
 ---
 name: prometheus-aether-ui
-description: Aether "Liquid Glass" UI aesthetic rules. Use for UI/UX design, component styling, cross-platform interface development (web, desktop, mobile), frontend beautification, and any task involving visual design, CSS, or component libraries. Triggers on keywords like UI, UX, styling, design, components, frontend, beautify, interface.
+version: 1.0.0
+description: Aether "Liquid Glass" UI aesthetic rules. Use for UI/UX design, component styling, cross-platform desktop/mobile/web interface development.
+priority: conditional
+triggers: [UI, UX, styling, components, interface, frontend, beautify, design]
 ---
 
-# Aether Aesthetics (Liquid Glass)
+# Aether Aesthetics (Liquid Glass Design Language)
 
-## Core Visual Rules
+## Core Visual Language
 
 ### 1. Frosted Glass Effect
-
+- Core feature: Semi-transparent + blurred background
 - Web: `backdrop-filter: blur(24px)`
-- See `references/aether-components.md` for platform-specific APIs
+- Desktop/Mobile: Use platform-native APIs (see mapping table below)
 
-### 2. Corner Radius (Only Two Values)
+### 2. Universal Softness
+**Only two corner radius values allowed:**
 
-| Type | Tailwind | CSS | Use For |
-|------|----------|-----|---------|
-| Container | `rounded-2xl` | `16px` | Button, Card, Modal, Input, Dropdown |
-| Pill | `rounded-full` | `9999px` | Avatar, Badge, Chip, Switch, Slider |
+| Type | Tailwind | CSS | Applicable Components |
+|------|----------|-----|----------------------|
+| Container | `rounded-2xl` | `16px` | Button, Card, Modal, Input, Dropdown... |
+| Pill | `rounded-full` | `9999px` | Avatar, Badge, Chip, Switch, Slider... |
 
-❌ **FORBIDDEN**: Sharp corners, other radius values
+❌ **FORBIDDEN**: Sharp corners or other radius values
 
-### 3. Motion
-
+### 3. Fluid Motion
 | Interaction | Duration | Easing |
 |-------------|----------|--------|
 | Hover | `150ms` | `ease-out` |
@@ -31,20 +34,34 @@ description: Aether "Liquid Glass" UI aesthetic rules. Use for UI/UX design, com
 
 ❌ **FORBIDDEN**: `linear` transitions
 
-## Cross-Platform Mapping
+---
 
-| Platform | Blur API | Corner Radius |
-|----------|----------|---------------|
-| Web | `backdrop-filter: blur()` | `border-radius` |
-| WPF/WinUI | `AcrylicBrush`, `MicaBackdrop` | `CornerRadius` |
-| SwiftUI | `.ultraThinMaterial` | `.cornerRadius()` |
-| Qt/QML | `FastBlur` | `radius` property |
+## Cross-Platform Mapping (Highest Aesthetic Directive)
 
-For complete API details, see `references/aether-components.md`.
+| Platform | Blur API | Corner Radius API | Animation API |
+|----------|----------|-------------------|---------------|
+| **Web** | `backdrop-filter: blur()` | `border-radius` | CSS transitions/animations |
+| **WPF** | `AcrylicBrush` | `CornerRadius` | `Storyboard` |
+| **WinUI 3** | `AcrylicBrush`, `MicaBackdrop` | `CornerRadius` | `AnimationBuilder` |
+| **SwiftUI** | `.ultraThinMaterial` | `.cornerRadius()` / `.clipShape()` | `withAnimation(.spring())` |
+| **UIKit** | `UIVisualEffectView` | `layer.cornerRadius` | `UIView.animate` |
+| **macOS** | `NSVisualEffectView` | `layer.cornerRadius` | `NSAnimationContext` |
+| **Qt/QML** | `FastBlur` + transparent window | `radius` property | `Behavior on` / `PropertyAnimation` |
+| **Tauri** | System API or CSS blur | CSS `border-radius` | CSS/JS animations |
 
-## Import Rules
+---
 
-- ✅ Only import components you need
-- ❌ Never import entire UI libraries
+## Component Standard
+
+See `resources/aether-components.md` for:
+- Complete Design Token definitions
+- 50+ component radius classifications
+- Platform-specific API examples
+
+---
+
+## Selective Import Principle
+
+- ✅ Only import components you actually need
+- ❌ FORBIDDEN: Import entire UI libraries (e.g., full Material UI)
 - ✅ Prefer tree-shakable libraries
-

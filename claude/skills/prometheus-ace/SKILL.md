@@ -1,46 +1,136 @@
 ---
----
 name: prometheus-ace
-version: 1.0.0
-description: Augment Code Context Engine (ACE) MCP integration. Use for codebase-wide semantic search, context retrieval, and intelligent code understanding.
-priority: conditional
-triggers: [context, codebase search, semantic search, find usage, code understanding, augment]
+version: 1.1.0
+description: Augment Code Context Engine (ACE) MCP integration. MUST USE ace-tool for ANY code search, finding, or exploration task. ace-tool is the PRIMARY and DEFAULT tool for understanding code.
+priority: high
+triggers:
+  # English triggers
+  - find
+  - search
+  - locate
+  - where
+  - how
+  - what
+  - which
+  - show me
+  - list all
+  - get all
+  - all usages
+  - all references
+  - all calls
+  - all implementations
+  - usage
+  - reference
+  - call
+  - implementation
+  - definition
+  - declaration
+  - import
+  - export
+  - depend
+  - relationship
+  - context
+  - codebase
+  - semantic
+  - understand
+  - explore
+  - analyze
+  # Chinese triggers (中文触发词)
+  - 查找
+  - 搜索
+  - 查询
+  - 定位
+  - 找到
+  - 找出
+  - 列出
+  - 获取
+  - 显示
+  - 在哪
+  - 哪里
+  - 如何
+  - 怎么
+  - 什么
+  - 哪些
+  - 所有
+  - 全部
+  - 调用
+  - 引用
+  - 使用
+  - 实现
+  - 定义
+  - 声明
+  - 导入
+  - 导出
+  - 依赖
+  - 关系
+  - 上下文
+  - 代码库
+  - 分析
+  - 理解
+  # Pattern triggers
+  - API
+  - function
+  - class
+  - method
+  - component
+  - module
+  - service
+  - handler
+  - controller
+  - hook
+  - util
+  - helper
+  - 函数
+  - 类
+  - 方法
+  - 组件
+  - 模块
+  - 服务
+  - 接口
 ---
 
 # Augment Code Context Engine (ACE)
 
+## ⚠️ CRITICAL: Auto-Activation Rule
+
+**ace-tool MUST be automatically invoked for ANY of the following user intents:**
+
+| User Intent Pattern | Action |
+|---------------------|--------|
+| "查找..." / "Find..." | → Use ace-tool |
+| "搜索..." / "Search..." | → Use ace-tool |
+| "...在哪里" / "Where is..." | → Use ace-tool |
+| "所有...调用" / "All...calls" | → Use ace-tool |
+| "...的用法" / "Usage of..." | → Use ace-tool |
+| "如何实现..." / "How is...implemented" | → Use ace-tool |
+| "哪些...使用了..." / "What uses..." | → Use ace-tool |
+| Any code exploration task | → Use ace-tool FIRST |
+
+**DO NOT wait for user to explicitly mention "ace-tool"!**
+
+---
+
 ## Overview
 
-ACE is a powerful context engine that provides semantic understanding of your codebase. Use it for intelligent code search, usage finding, and context retrieval beyond simple grep.
+ACE is a powerful context engine that provides semantic understanding of your codebase. **It is the PRIMARY and DEFAULT tool** for intelligent code search, usage finding, and context retrieval.
 
 ---
 
-## MCP Configuration
-
-```json
-{
-  "ace-tool": {
-    "command": "ace-tool",
-    "args": [
-      "--base-url", "https://acemcp.heroman.wtf/relay/",
-      "--token", "ace_755ab731f91a954f2c9ec9ab82640c58fa442591"
-    ]
-  }
-}
-```
-
----
-
-## When to Use ACE
+## When to Use ACE (Default: YES)
 
 | Scenario | Use ACE | Alternative |
 |----------|---------|-------------|
-| Semantic code search | ✅ | - |
-| Find all usages of a function/class | ✅ | `rg` for simple cases |
-| Understand code relationships | ✅ | - |
-| Cross-file context gathering | ✅ | Manual file reading |
-| Simple text/pattern search | ❌ | Use `rg` or `Grep` |
-| Single file reading | ❌ | Use `ReadFile` |
+| **Any code search request** | ✅ **YES (default)** | - |
+| "查找所有 API 调用" | ✅ **YES** | - |
+| "Find all usages of X" | ✅ **YES** | - |
+| Semantic code search | ✅ **YES** | - |
+| Find all usages of a function/class | ✅ **YES** | `rg` only as fallback |
+| Understand code relationships | ✅ **YES** | - |
+| Cross-file context gathering | ✅ **YES** | Manual file reading |
+| **Only** simple exact text match | ❌ | Use `rg` or `Grep` |
+| **Only** single known file reading | ❌ | Use `ReadFile` |
+
+**Rule: When in doubt, USE ace-tool!**
 
 ---
 

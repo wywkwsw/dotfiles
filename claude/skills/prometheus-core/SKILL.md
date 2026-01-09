@@ -1,9 +1,9 @@
 ---
 
+name: prometheus-core
 version: 5.1.1
 description: Prometheus core workflow. Use for any non-trivial development task including feature implementation, refactoring, architecture design, and code review.
 priority: required
----
 
 ## Task Complexity Assessment (FIRST STEP)
 

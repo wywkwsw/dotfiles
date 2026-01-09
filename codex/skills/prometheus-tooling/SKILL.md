@@ -1,64 +1,91 @@
 ---
 name: prometheus-tooling
-description: Tooling strategy and graceful degradation when tools are unavailable. Use when MCP tools fail, return empty results, permissions are denied, or environment is abnormal. Triggers automatically when tool calls fail or return errors.
+version: 1.0.0
+description: Tooling strategy and fallback solutions. Use when MCP tools are unavailable, permissions are restricted, or environment is abnormal.
+priority: fallback
+triggers: [tool unavailable, MCP failure, permission denied, environment issues]
 ---
 
 # Tooling Policy (Graceful Degradation)
 
 ## Core Principles
 
-- ✅ Prefer tools when available
-- ✅ Continue progress when tools unavailable
-- ✅ Maintain C.O.D.E loop regardless
+- ✅ Prefer tools when available and helpful
+- ✅ Continue progress when tools are unavailable—don't block
+- ✅ Always maintain the C.O.D.E loop and approval gate
 
-## Fallback Mapping
+---
+
+## Fallback Mapping Table
+
+### Code Context Tools (⚡ 优先级最高)
+
+| MCP Tool | Fallback Strategy | Commands |
+|----------|-------------------|----------|
+| `ace-tool` | 使用 rg/grep + ReadFile 组合 | `rg "pattern" --type <lang> -n` |
+
+**ace-tool 降级详细策略：**
+1. `rg "symbol" --type <lang> -n` — 符号定位
+2. `rg "import.*from" --type ts` — 依赖追踪  
+3. `find . -type f -name "*.ts"` — 文件定位
+4. `ReadFile` — 读取定位到的文件
+
+### Other MCP Tools
 
 | MCP Tool | Fallback Strategy |
 |----------|-------------------|
-| `mcp.playwright` | Manual test steps + expected results |
-| `mcp.deepwiki` | Official doc links + search suggestions |
-| `mcp.memory` | Use project `/docs` or ask user |
-| `mcp.sequential_thinking` | Show reasoning in response |
-| `mcp.shrimp_task_manager` | Markdown task lists |
-| `mcp.feedback_enhanced` | Request feedback at response end |
-| `mcp.server_time` | `date -u +"%Y-%m-%dT%H:%M:%SZ"` |
-| `mcp.context7` | Read project files manually |
+| `mcp.playwright` | Provide manual test steps + expected results |
+| `mcp.deepwiki` | Reference official doc links + search suggestions |
+| `mcp.memory` | Use project `/docs` or ask user to record |
+| `mcp.sequential_thinking` | Show reasoning process in response |
+| `mcp.shrimp_task_manager` | Use Markdown task lists |
+| `mcp.feedback_enhanced` | Request feedback directly at response end |
+| `mcp.server_time` | Use system command `date` or ask user to provide |
+| `mcp.context7` | Manually read project files |
 
-## Response Template (Degraded Mode)
+---
 
-```
+## Response Template When Tools Unavailable
+
+```markdown
 [STATUS]
-Phase: <phase>
-Task: <description>
+Phase: <current phase>
+Task: <task description>
 Code-Intel-Sync: <files read>
-Tool-Status: ⚠️ <tool> unavailable, using fallback
+Tool-Status: ⚠️ <tool name> unavailable, using fallback strategy
 Next: <next step>
 ```
 
-## Scenario Handling
+---
 
-### MCP Returns "No tools available"
+## Common Scenario Handling
+
+### Scenario 1: MCP Server Reports "No tools available"
+
 1. Continue reading repo files
 2. Request logs/repro steps
-3. Provide commands for local execution
+3. Provide commands user can run locally
 
-### Insufficient Permissions
-1. Explain needed permissions
-2. Provide manual alternatives
-3. Give copy-paste commands
+### Scenario 2: Insufficient Permissions
 
-### Network/Service Unavailable
-1. Use offline knowledge
-2. Provide doc links
-3. Mark assumptions for verification
+1. Explain what permissions are needed
+2. Provide alternatives (user manual execution)
+3. Provide commands for user to copy-paste
+
+### Scenario 3: Network/External Service Unavailable
+
+1. Use local cache or offline knowledge
+2. Provide doc links for user to check
+3. Mark assumptions that need later verification
+
+---
 
 ## Local Command Alternatives
 
-| Need | Command |
-|------|---------|
-| Timestamp | `date -u +"%Y-%m-%dT%H:%M:%SZ"` |
+| Need | Alternative Command |
+|------|---------------------|
+| Get timestamp | `date -u +"%Y-%m-%dT%H:%M:%SZ"` |
 | Search code | `rg "pattern" --type <lang>` |
-| File structure | `tree -L 2` |
+| View file structure | `tree -L 2` or `find . -type f -name "*.ts"` |
 | Run tests | `npm test` / `pytest` / `cargo test` |
-| Dependencies | `npm ls` / `pip list` / `cargo tree` |
-
+| Check dependencies | `npm ls` / `pip list` / `cargo tree` |

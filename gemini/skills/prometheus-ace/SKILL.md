@@ -1,29 +1,136 @@
 ---
 name: prometheus-ace
-version: 1.0.0
-description: Code Context Engine integration. Use for codebase-wide semantic search, context retrieval, and intelligent code understanding.
-priority: conditional
-triggers: [context, codebase search, semantic search, find usage, code understanding]
+version: 1.1.0
+description: Code Context Engine integration. MUST USE semantic search for ANY code search, finding, or exploration task. Semantic search is the PRIMARY and DEFAULT tool for understanding code.
+priority: high
+triggers:
+  # English triggers
+  - find
+  - search
+  - locate
+  - where
+  - how
+  - what
+  - which
+  - show me
+  - list all
+  - get all
+  - all usages
+  - all references
+  - all calls
+  - all implementations
+  - usage
+  - reference
+  - call
+  - implementation
+  - definition
+  - declaration
+  - import
+  - export
+  - depend
+  - relationship
+  - context
+  - codebase
+  - semantic
+  - understand
+  - explore
+  - analyze
+  # Chinese triggers (中文触发词)
+  - 查找
+  - 搜索
+  - 查询
+  - 定位
+  - 找到
+  - 找出
+  - 列出
+  - 获取
+  - 显示
+  - 在哪
+  - 哪里
+  - 如何
+  - 怎么
+  - 什么
+  - 哪些
+  - 所有
+  - 全部
+  - 调用
+  - 引用
+  - 使用
+  - 实现
+  - 定义
+  - 声明
+  - 导入
+  - 导出
+  - 依赖
+  - 关系
+  - 上下文
+  - 代码库
+  - 分析
+  - 理解
+  # Pattern triggers
+  - API
+  - function
+  - class
+  - method
+  - component
+  - module
+  - service
+  - handler
+  - controller
+  - hook
+  - util
+  - helper
+  - 函数
+  - 类
+  - 方法
+  - 组件
+  - 模块
+  - 服务
+  - 接口
 ---
 
 # Code Context Engine (ACE)
 
-## Overview
+## ⚠️ CRITICAL: Auto-Activation Rule
 
-ACE provides semantic understanding of your codebase. Use it for intelligent code search, usage finding, and context retrieval beyond simple grep.
+**Semantic search MUST be automatically invoked for ANY of the following user intents:**
+
+| User Intent Pattern | Action |
+|---------------------|--------|
+| "查找..." / "Find..." | → Use semantic search |
+| "搜索..." / "Search..." | → Use semantic search |
+| "...在哪里" / "Where is..." | → Use semantic search |
+| "所有...调用" / "All...calls" | → Use semantic search |
+| "...的用法" / "Usage of..." | → Use semantic search |
+| "如何实现..." / "How is...implemented" | → Use semantic search |
+| "哪些...使用了..." / "What uses..." | → Use semantic search |
+| Any code exploration task | → Use semantic search FIRST |
+
+**DO NOT wait for user to explicitly mention the tool name!**
 
 ---
 
-## When to Use Semantic Search
+## Overview
+
+Semantic search provides powerful understanding of your codebase. **It is the PRIMARY and DEFAULT tool** for intelligent code search, usage finding, and context retrieval.
+
+---
+
+## When to Use Semantic Search (Default: YES)
 
 | Scenario | Use Semantic Search | Alternative |
 |----------|---------------------|-------------|
-| Semantic code search | ✅ | - |
-| Find all usages of a function/class | ✅ | `rg` for simple cases |
-| Understand code relationships | ✅ | - |
-| Cross-file context gathering | ✅ | Manual file reading |
-| Simple text/pattern search | ❌ | Use `rg` or `grep` |
-| Single file reading | ❌ | Use Read File |
+| **Any code search request** | ✅ **YES (default)** | - |
+| "查找所有 API 调用" | ✅ **YES** | - |
+| "Find all usages of X" | ✅ **YES** | - |
+| Semantic code search | ✅ **YES** | - |
+| Find all usages of a function/class | ✅ **YES** | `rg` only as fallback |
+| Understand code relationships | ✅ **YES** | - |
+| Cross-file context gathering | ✅ **YES** | Manual file reading |
+| **Only** simple exact text match | ❌ | Use `rg` or `grep` |
+| **Only** single known file reading | ❌ | Use Read File |
+
+**Rule: When in doubt, USE semantic search!**
 
 ---
 

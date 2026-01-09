@@ -4,20 +4,23 @@
 
 ## Skill Inventory
 
-| Skill | Purpose | Priority | Auto-Trigger Keywords |
-|-------|---------|----------|----------------------|
-| `prometheus-core` | Core C.O.D.E workflow | 🔴 Required | (always active for non-trivial tasks) |
-| `prometheus-aether-ui` | Liquid Glass UI aesthetics | 🟡 Conditional | UI, UX, styling, design, component, frontend |
-| `prometheus-debug` | Advanced debugging protocol | 🟡 Conditional | bug, error, fix, debug, crash, failing test |
-| `prometheus-tooling` | Graceful degradation | 🟢 Fallback | (auto when tools unavailable) |
-| `prometheus-ace` | Augment Code Context Engine | 🟡 Conditional | context, semantic search, codebase, find usage |
-| `prometheus-code-cycle` | Change header comments | ⚪ Optional | audit, tracing, changelog (user request only) |
+
+| Skill                   | Purpose                     | Priority       | Auto-Trigger Keywords                          |
+| ----------------------- | --------------------------- | -------------- | ---------------------------------------------- |
+| `prometheus-core`       | Core C.O.D.E workflow       | 🔴 Required    | (always active for non-trivial tasks)          |
+| `prometheus-aether-ui`  | Liquid Glass UI aesthetics  | 🟡 Conditional | UI, UX, styling, design, component, frontend   |
+| `prometheus-debug`      | Advanced debugging protocol | 🟡 Conditional | bug, error, fix, debug, crash, failing test    |
+| `prometheus-tooling`    | Graceful degradation        | 🟢 Fallback    | (auto when tools unavailable)                  |
+| `prometheus-ace`        | Augment Code Context Engine | 🟡 Conditional | context, semantic search, codebase, find usage |
+| `prometheus-code-cycle` | Change header comments      | ⚪ Optional     | audit, tracing, changelog (user request only)  |
+
 
 ---
 
 ## Loading Rules
 
 ### Priority Order
+
 ```
 1. prometheus-core        (always loads first)
 2. prometheus-ace         (if codebase exploration needed)
@@ -28,6 +31,7 @@
 ```
 
 ### Auto-Detection Logic
+
 ```
 IF task is non-trivial:
     LOAD prometheus-core
@@ -46,7 +50,9 @@ IF task is non-trivial:
 ```
 
 ### Manual Override
+
 If a skill doesn't auto-trigger, request:
+
 ```
 Please use the Prometheus <skill-name> skill for this task
 ```
@@ -55,18 +61,20 @@ Please use the Prometheus <skill-name> skill for this task
 
 ## Skill Combination Matrix
 
-| Scenario | Skills Loaded | Notes |
-|----------|---------------|-------|
-| Simple code change | `core` only | Fast path, may skip O phase |
-| Feature implementation | `core` | Full C.O.D.E loop |
-| UI feature | `core` + `aether-ui` | Apply Liquid Glass aesthetics |
-| Bug investigation | `core` + `debug` | Root cause analysis required |
-| UI bug fix | `core` + `aether-ui` + `debug` | Aesthetic + debug protocols |
-| Tool-limited env | `core` + `tooling` | Use fallback strategies |
-| Enterprise project | `core` + `code-cycle` | Add change headers |
-| Full UI project | `core` + `aether-ui` + `code-cycle` | Aesthetics + tracing |
-| Codebase exploration | `core` + `ace` | Semantic search + context |
-| Large refactoring | `core` + `ace` + `debug` | Find all usages + validation |
+
+| Scenario               | Skills Loaded                       | Notes                         |
+| ---------------------- | ----------------------------------- | ----------------------------- |
+| Simple code change     | `core` only                         | Fast path, may skip O phase   |
+| Feature implementation | `core`                              | Full C.O.D.E loop             |
+| UI feature             | `core` + `aether-ui`                | Apply Liquid Glass aesthetics |
+| Bug investigation      | `core` + `debug`                    | Root cause analysis required  |
+| UI bug fix             | `core` + `aether-ui` + `debug`      | Aesthetic + debug protocols   |
+| Tool-limited env       | `core` + `tooling`                  | Use fallback strategies       |
+| Enterprise project     | `core` + `code-cycle`               | Add change headers            |
+| Full UI project        | `core` + `aether-ui` + `code-cycle` | Aesthetics + tracing          |
+| Codebase exploration   | `core` + `ace`                      | Semantic search + context     |
+| Large refactoring      | `core` + `ace` + `debug`            | Find all usages + validation  |
+
 
 ---
 
@@ -74,21 +82,41 @@ Please use the Prometheus <skill-name> skill for this task
 
 When skills have conflicting guidance:
 
-| Conflict | Resolution |
-|----------|------------|
-| `core` vs `debug` on D phase | `debug` takes precedence for error-related tasks |
-| `aether-ui` vs speed | Aesthetics are non-negotiable, find efficient implementation |
-| `tooling` fallback vs tool usage | Always try tool first, fallback only on failure |
-| `ace-tool` vs `ReadFile` | **ace-tool 优先**，ReadFile 仅用于读取定位到的文件 |
+
+| Conflict                         | Resolution                                                   |
+| -------------------------------- | ------------------------------------------------------------ |
+| `core` vs `debug` on D phase     | `debug` takes precedence for error-related tasks             |
+| `aether-ui` vs speed             | Aesthetics are non-negotiable, find efficient implementation |
+| `tooling` fallback vs tool usage | Always try tool first, fallback only on failure              |
+| `ace-tool` vs `ReadFile`         | **ace-tool 优先**，ReadFile 仅用于读取定位到的文件                         |
+
 
 ---
 
 ## Tool Priority Rule ⚡
 
+### ⚠️ ace-tool 自动触发规则（最高优先级）
+
+**当用户请求包含以下任意模式时，必须自动调用 ace-tool：**
+
+
+| 用户请求                          | 动作                  |
+| ----------------------------- | ------------------- |
+| "查找..." / "Find..." / "搜索..." | → **自动调用 ace-tool** |
+| "...在哪里" / "Where is..."      | → **自动调用 ace-tool** |
+| "所有...调用" / "All...calls"     | → **自动调用 ace-tool** |
+| "...的用法" / "Usage of..."      | → **自动调用 ace-tool** |
+| 任何涉及 API/函数/类/组件 的搜索          | → **自动调用 ace-tool** |
+
+
+**❌ 禁止等待用户显式说 "用 ace-tool" 才调用！**
+
+### 工具优先级
+
 **代码上下文获取必须遵循以下优先级：**
 
 ```
-1️⃣ ace-tool (mcp__ace-tool__search_context)  ← MUST TRY FIRST
+1️⃣ ace-tool (mcp__ace-tool__search_context)  ← 自动触发，MUST TRY FIRST
     ↓ (only if failed)
 2️⃣ rg / grep (pattern search)
     ↓ (for specific content)
@@ -96,15 +124,18 @@ When skills have conflicting guidance:
 ```
 
 **禁止行为：**
+
 - ❌ 跳过 ace-tool 直接用 ReadFile 探索代码
 - ❌ 在 ace-tool 可用时使用 grep 进行语义搜索
 - ❌ 不尝试 ace-tool 就使用降级方案
+- ❌ 等待用户显式提及 "ace-tool" 才调用
 
 ---
 
 ## Quick Reference Cards
 
 ### Core (Always)
+
 ```
 C → O (⚠️ approval gate) → D → E
 [STATUS] header required
@@ -112,6 +143,7 @@ Context-First: read code, don't guess
 ```
 
 ### Aether UI (When UI)
+
 ```
 Radius: rounded-2xl (containers) | rounded-full (pills)
 Blur: backdrop-filter / platform equivalent
@@ -119,6 +151,7 @@ Motion: ease-out/ease-in-out, never linear
 ```
 
 ### Debug (When Fixing)
+
 ```
 L1: Static review
 L2: Unit/integration tests
@@ -127,13 +160,18 @@ Output: Root Cause → Fix → How to Verify
 ```
 
 ### Tooling (When Degraded)
+
 ```
 Tool fails → Check fallback table → Provide alternative
 Never block progress due to tool unavailability
 ```
 
-### ACE (When Exploring) ⚡ PRIORITY TOOL
+### ACE (When Exploring) ⚡ PRIORITY TOOL + AUTO-TRIGGER
+
 ```
+用户说"查找/搜索/找/在哪里/所有..." → 自动调用 ace-tool
+无需用户显式提及工具名！
+
 ace-tool FIRST → Fallback to rg/grep → Then ReadFile
 MUST try ace-tool before any code exploration
 Fallback: rg + ReadFile when ace unavailable
@@ -143,11 +181,14 @@ Fallback: rg + ReadFile when ace unavailable
 
 ## Version Info
 
-| Skill | Version | Last Updated |
-|-------|---------|--------------|
-| prometheus-core | 5.1.0 | 2024-12-22 |
-| prometheus-aether-ui | 1.0.0 | 2024-12-22 |
-| prometheus-debug | 1.0.0 | 2024-12-22 |
-| prometheus-tooling | 1.0.0 | 2024-12-22 |
-| prometheus-ace | 1.0.0 | 2024-12-22 |
-| prometheus-code-cycle | 1.0.0 | 2024-12-22 |
+
+| Skill                 | Version | Last Updated |
+| --------------------- | ------- | ------------ |
+| prometheus-core       | 5.1.0   | 2024-12-22   |
+| prometheus-aether-ui  | 1.0.0   | 2024-12-22   |
+| prometheus-debug      | 1.0.0   | 2024-12-22   |
+| prometheus-tooling    | 1.0.0   | 2024-12-22   |
+| prometheus-ace        | 1.0.0   | 2024-12-22   |
+| prometheus-code-cycle | 1.0.0   | 2024-12-22   |
+
+
