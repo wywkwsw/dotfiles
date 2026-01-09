@@ -5,14 +5,16 @@
 ## Skill Inventory
 
 
-| Skill                   | Purpose                     | Priority       | Auto-Trigger Keywords                          |
-| ----------------------- | --------------------------- | -------------- | ---------------------------------------------- |
-| `prometheus-core`       | Core C.O.D.E workflow       | 🔴 Required    | (always active for non-trivial tasks)          |
-| `prometheus-aether-ui`  | Liquid Glass UI aesthetics  | 🟡 Conditional | UI, UX, styling, design, component, frontend   |
-| `prometheus-debug`      | Advanced debugging protocol | 🟡 Conditional | bug, error, fix, debug, crash, failing test    |
-| `prometheus-tooling`    | Graceful degradation        | 🟢 Fallback    | (auto when tools unavailable)                  |
-| `prometheus-ace`        | Augment Code Context Engine | 🟡 Conditional | context, semantic search, codebase, find usage |
-| `prometheus-code-cycle` | Change header comments      | ⚪ Optional     | audit, tracing, changelog (user request only)  |
+| Skill                    | Purpose                       | Priority       | Auto-Trigger Keywords                            |
+| ------------------------ | ----------------------------- | -------------- | ------------------------------------------------ |
+| `prometheus-core`        | Core C.O.D.E workflow         | 🔴 Required    | (always active for non-trivial tasks)            |
+| `prometheus-aether-ui`   | Liquid Glass UI aesthetics    | 🟡 Conditional | UI, UX, styling, design, component, frontend     |
+| `prometheus-debug`       | Advanced debugging protocol   | 🟡 Conditional | bug, error, fix, debug, crash, failing test      |
+| `prometheus-tooling`     | Graceful degradation          | 🟢 Fallback    | (auto when tools unavailable)                    |
+| `prometheus-ace`         | Augment Code Context Engine   | 🟡 Conditional | context, semantic search, codebase, find usage   |
+| `prometheus-ui-inspector`| UI visual inspection          | 🟡 Conditional | UI检查, layout, alignment, overflow, screenshot  |
+| `prometheus-performance` | Performance analysis          | 🟡 Conditional | 性能, performance, CWV, LCP, slow, optimization  |
+| `prometheus-code-cycle`  | Change header comments        | ⚪ Optional     | audit, tracing, changelog (user request only)    |
 
 
 ---
@@ -22,12 +24,14 @@
 ### Priority Order
 
 ```
-1. prometheus-core        (always loads first)
-2. prometheus-ace         (if codebase exploration needed)
-3. prometheus-aether-ui   (if UI-related)
-4. prometheus-debug       (if debugging-related)
-5. prometheus-tooling     (if tools fail)
-6. prometheus-code-cycle  (only on explicit request)
+1. prometheus-core          (always loads first)
+2. prometheus-ace           (if codebase exploration needed)
+3. prometheus-aether-ui     (if UI-related)
+4. prometheus-debug         (if debugging-related)
+5. prometheus-ui-inspector  (if UI visual inspection needed)
+6. prometheus-performance   (if performance analysis needed)
+7. prometheus-tooling       (if tools fail)
+8. prometheus-code-cycle    (only on explicit request)
 ```
 
 ### Auto-Detection Logic
@@ -44,6 +48,12 @@ IF task is non-trivial:
     
     IF task.contains(bug, error, fix, debug, test failure):
         LOAD prometheus-debug
+    
+    IF task.contains(UI检查, layout check, alignment, overflow, screenshot):
+        LOAD prometheus-ui-inspector
+    
+    IF task.contains(性能, performance, CWV, LCP, slow, optimization):
+        LOAD prometheus-performance
     
     IF MCP_tool.fails OR MCP_tool.unavailable:
         LOAD prometheus-tooling
@@ -62,18 +72,23 @@ Please use the Prometheus <skill-name> skill for this task
 ## Skill Combination Matrix
 
 
-| Scenario               | Skills Loaded                       | Notes                         |
-| ---------------------- | ----------------------------------- | ----------------------------- |
-| Simple code change     | `core` only                         | Fast path, may skip O phase   |
-| Feature implementation | `core`                              | Full C.O.D.E loop             |
-| UI feature             | `core` + `aether-ui`                | Apply Liquid Glass aesthetics |
-| Bug investigation      | `core` + `debug`                    | Root cause analysis required  |
-| UI bug fix             | `core` + `aether-ui` + `debug`      | Aesthetic + debug protocols   |
-| Tool-limited env       | `core` + `tooling`                  | Use fallback strategies       |
-| Enterprise project     | `core` + `code-cycle`               | Add change headers            |
-| Full UI project        | `core` + `aether-ui` + `code-cycle` | Aesthetics + tracing          |
-| Codebase exploration   | `core` + `ace`                      | Semantic search + context     |
-| Large refactoring      | `core` + `ace` + `debug`            | Find all usages + validation  |
+| Scenario               | Skills Loaded                            | Notes                           |
+| ---------------------- | ---------------------------------------- | ------------------------------- |
+| Simple code change     | `core` only                              | Fast path, may skip O phase     |
+| Feature implementation | `core`                                   | Full C.O.D.E loop               |
+| UI feature             | `core` + `aether-ui`                     | Apply Liquid Glass aesthetics   |
+| Bug investigation      | `core` + `debug`                         | Root cause analysis required    |
+| UI bug fix             | `core` + `aether-ui` + `debug`           | Aesthetic + debug protocols     |
+| Tool-limited env       | `core` + `tooling`                       | Use fallback strategies         |
+| Enterprise project     | `core` + `code-cycle`                    | Add change headers              |
+| Full UI project        | `core` + `aether-ui` + `code-cycle`      | Aesthetics + tracing            |
+| Codebase exploration   | `core` + `ace`                           | Semantic search + context       |
+| Large refactoring      | `core` + `ace` + `debug`                 | Find all usages + validation    |
+| UI visual inspection   | `core` + `ui-inspector`                  | Screenshot + DOM analysis       |
+| UI QA full check       | `core` + `aether-ui` + `ui-inspector`    | Design + visual verification    |
+| Performance analysis   | `core` + `performance`                   | CWV + network + trace analysis  |
+| Performance debugging  | `core` + `performance` + `debug`         | Performance + root cause        |
+| Full frontend QA       | `core` + `ui-inspector` + `performance`  | Visual + performance testing    |
 
 
 ---
@@ -177,18 +192,53 @@ MUST try ace-tool before any code exploration
 Fallback: rg + ReadFile when ace unavailable
 ```
 
+### UI Inspector (When Visual QA)
+
+```
+Tools: chrome-devtools MCP
+  - take_snapshot → DOM 结构快照
+  - take_screenshot → 页面/元素截图
+  - evaluate_script → 布局分析脚本
+  - resize_page → 响应式检查
+
+检查类型:
+  🔴 溢出 (overflow)
+  🟡 对齐 (alignment)
+  🟡 层叠 (z-index)
+  🟢 间距 (spacing)
+
+输出: 问题列表 + 截图证据 + 修复建议
+```
+
+### Performance (When Optimizing)
+
+```
+Tools: chrome-devtools MCP
+  - performance_start_trace → 性能追踪
+  - performance_stop_trace → 停止追踪
+  - performance_analyze_insight → 洞察分析
+  - list_network_requests → 网络请求
+
+Core Web Vitals 目标:
+  LCP < 2.5s | FCP < 1.8s | CLS < 0.1 | INP < 200ms
+
+输出: CWV 报告 + 资源分析 + 优化建议
+```
+
 ---
 
 ## Version Info
 
 
-| Skill                 | Version | Last Updated |
-| --------------------- | ------- | ------------ |
-| prometheus-core       | 5.1.0   | 2024-12-22   |
-| prometheus-aether-ui  | 1.0.0   | 2024-12-22   |
-| prometheus-debug      | 1.0.0   | 2024-12-22   |
-| prometheus-tooling    | 1.0.0   | 2024-12-22   |
-| prometheus-ace        | 1.0.0   | 2024-12-22   |
-| prometheus-code-cycle | 1.0.0   | 2024-12-22   |
+| Skill                   | Version | Last Updated |
+| ----------------------- | ------- | ------------ |
+| prometheus-core         | 5.1.0   | 2024-12-22   |
+| prometheus-aether-ui    | 1.0.0   | 2024-12-22   |
+| prometheus-debug        | 1.0.0   | 2024-12-22   |
+| prometheus-tooling      | 1.0.0   | 2024-12-22   |
+| prometheus-ace          | 1.0.0   | 2024-12-22   |
+| prometheus-ui-inspector | 1.0.0   | 2025-01-09   |
+| prometheus-performance  | 1.0.0   | 2025-01-09   |
+| prometheus-code-cycle   | 1.0.0   | 2024-12-22   |
 
 
