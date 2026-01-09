@@ -1,4 +1,5 @@
 ---
+---
 name: prometheus-ace
 version: 1.0.0
 description: Augment Code Context Engine (ACE) MCP integration. Use for codebase-wide semantic search, context retrieval, and intelligent code understanding.
