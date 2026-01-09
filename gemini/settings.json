@@ -16,6 +16,14 @@
       ],
       "command": "ace-tool"
     },
+    "chrome-devtools": {
+      "args": [
+        "-y",
+        "chrome-devtools-mcp@latest"
+      ],
+      "command": "npx",
+      "env": {}
+    },
     "context7": {
       "args": [
         "-y",
